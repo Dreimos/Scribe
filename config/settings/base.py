@@ -71,11 +71,13 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "ckeditor",
+    "ckeditor_uploader",
 ]
 
 LOCAL_APPS = [
     "scribe.users.apps.UsersConfig",
-    # Your stuff: custom apps go here
+    "scribe.quickscribe.apps.QuickscribeConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -270,3 +272,4 @@ SOCIALACCOUNT_ADAPTER = "scribe.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+CKEDITOR_UPLOAD_PATH = str(ROOT_DIR / "uploads/")
