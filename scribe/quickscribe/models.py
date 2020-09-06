@@ -5,7 +5,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from autoslug import AutoSlugField
 
-YEAR_CHOICES = [(r,r) for r in range(1900, datetime.datetime.now().year)]
+YEAR_CHOICES = [(r,r) for r in reversed(range(1900, datetime.datetime.now().year+1))]
 
 def default_year():
     return datetime.datetime.now().year
@@ -31,9 +31,10 @@ class Language(Selectors):
     pass
 
 class Novel(models.Model):
-    name = models.TextField("Name", unique=True, default="N/A")
-    author = models.CharField("Author(s)", default="N/A", max_length=255)
-    artist = models.CharField("Artist(s)", blank=True, default="N/A", max_length=255)
+    name = models.TextField("Name", unique=True, max_length=500)
+    slug = AutoSlugField("Slug", unique=True, always_update=False, populate_from="name")
+    author = models.CharField("Author(s)", max_length=255)
+    artist = models.CharField("Artist(s)", blank=True, max_length=255)
     year = models.IntegerField("Year of publication", choices=YEAR_CHOICES, default=default_year)
     publisher = models.CharField("Publisher", blank=True, max_length=255)
     licensed = models.BooleanField("Licensed", default=False)
