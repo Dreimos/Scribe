@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
-{% block 'content' %}
-      {{ novel.name }}
+{% block content %}
+      <h1>{{ novel.name }}</h1>
+      <h2>Description:</h2>
+      <p>{{ novel.description|linebreaks }}</p>
+      <h2>Associated names</h2>
+      <p>{{ novel.alt_name|linebreaks }}</p>
+      <a href={% url 'quickscribe:chapter-create' slug=novel.slug %} class="btn btn-primary">Submit new chapter</a>
 {% endblock  %}

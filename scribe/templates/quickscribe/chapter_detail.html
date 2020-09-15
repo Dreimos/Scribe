@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h1>{{ chapter.name }}</h1>
+    <h2>{{ chapter.novel.name }}</h2>
+    <a href="#">{{ chapter.uploader.username }}</a>
+    {{ chapter.content|safe }}
+{% endblock  %}

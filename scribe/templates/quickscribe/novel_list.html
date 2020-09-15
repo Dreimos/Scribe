@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for novel in novel_list %}
+        <div>
+            <a href="{% url 'quickscribe:novel-detail' slug=novel.slug %}">{{ novel.name }}</a>
+        </div>
+    {% endfor %}
+    <a href={% url 'quickscribe:novel-create'%} class="btn btn-primary">Submit new novel</a>
+{% endblock  %}

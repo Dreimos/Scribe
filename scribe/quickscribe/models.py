@@ -1,6 +1,6 @@
 import datetime
 from django.conf import settings
-
+from django.urls import reverse
 from django.db import models
 from ckeditor.fields import RichTextField
 from autoslug import AutoSlugField
@@ -32,6 +32,7 @@ class Language(Selectors):
 
 class Novel(models.Model):
     name = models.TextField("Name", unique=True, max_length=500)
+    alt_name = models.TextField("Alternative title(s)", blank=True, max_length=1000)
     slug = AutoSlugField("Slug", unique=True, always_update=False, populate_from="name")
     author = models.CharField("Author(s)", max_length=255)
     artist = models.CharField("Artist(s)", blank=True, max_length=255)
@@ -43,12 +44,17 @@ class Novel(models.Model):
     genres = models.ManyToManyField("Genre", verbose_name="Genres")
     tags = models.ManyToManyField("Tag", verbose_name="Tags")
     language = models.ManyToManyField("Language", verbose_name="Language")
+    description = models.TextField("Description", blank=True, max_length=5000)
 
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("quickscribe:novel-detail", kwargs={"slug": self.slug})
+    
+
 class Chapter(models.Model):
-    title = models.CharField("Title", max_length=255)
+    name = models.CharField("Title", max_length=255)
     content = RichTextField("Chapter content")
     novel = models.ForeignKey("Novel", on_delete=models.CASCADE)
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
@@ -57,5 +63,8 @@ class Chapter(models.Model):
     views = models.IntegerField("Chapter views", default=0)
 
     def __str__(self):
-        return self.title
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("quickscribe:chapter-detail", kwargs={"pk": self.id})
     
