@@ -73,7 +73,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "ckeditor",
     "ckeditor_uploader",
-    #'django-bleach', TODO: impliment for safe rich text
+    'django_bleach', #TODO: impliment for safe rich text
     'rest_framework',
 ]
 
@@ -278,6 +278,26 @@ SOCIALACCOUNT_ADAPTER = "scribe.users.adapters.SocialAccountAdapter"
 # Rich text setting
 # ------------------------------------------------------------------------------
 CKEDITOR_UPLOAD_PATH = str(ROOT_DIR / "uploads/")
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+                ["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
+                ['NumberedList', 'BulletedList', "Indent", "Outdent",
+                'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"],
+                ['Undo', 'Redo'],
+                ["Maximize"]
+            ],
+    }
+}
+
+BLEACH_ALLOWED_TAGS = ['p', 'h3', 'h4', 'em', 'strong', 'u', 's', 'a', 'ul', 'ol', 'li', 'blockquote', 'img', 'table', 'tr', 'th', 'td']
+BLEACH_ALLOWED_ATTRIBUTES = ['href', 'title', 'name', 'src', 'style', 'border', 'cellpadding', 'cellspacing']
+BLEACH_ALLOWED_STYLES = [
+    'font-family', 'font-weight', 'text-decoration', 'font-variant' , 'text-align', 'width', 'height'
+    ]
+BLEACH_STRIP_TAGS = True
 
 # Rest API settings
 # ------------------------------------------------------------------------------
