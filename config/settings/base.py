@@ -73,7 +73,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "ckeditor",
     "ckeditor_uploader",
-    #'django-bleach',
+    #'django-bleach', TODO: impliment for safe rich text
     'rest_framework',
 ]
 
