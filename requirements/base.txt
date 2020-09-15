@@ -18,3 +18,10 @@ django-redis==4.12.1  # https://github.com/jazzband/django-redis
 # ------------------------------------------------------------------------------
 django-ckeditor
 django-autoslug
+django-bleach
+
+# REST
+# ------------------------------------------------------------------------------
+djangorestframework
+markdown
+django-filter

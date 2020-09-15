@@ -73,6 +73,8 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "ckeditor",
     "ckeditor_uploader",
+    #'django-bleach',
+    'rest_framework',
 ]
 
 LOCAL_APPS = [
@@ -272,4 +274,17 @@ SOCIALACCOUNT_ADAPTER = "scribe.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# Rich text setting
+# ------------------------------------------------------------------------------
 CKEDITOR_UPLOAD_PATH = str(ROOT_DIR / "uploads/")
+
+# Rest API settings
+# ------------------------------------------------------------------------------
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}

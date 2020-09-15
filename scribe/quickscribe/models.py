@@ -51,7 +51,6 @@ class Novel(models.Model):
 
     def get_absolute_url(self):
         return reverse("quickscribe:novel-detail", kwargs={"slug": self.slug})
-    
 
 class Chapter(models.Model):
     name = models.CharField("Title", max_length=255)
@@ -67,4 +66,3 @@ class Chapter(models.Model):
 
     def get_absolute_url(self):
         return reverse("quickscribe:chapter-detail", kwargs={"pk": self.id})
-    
