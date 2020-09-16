@@ -16,6 +16,11 @@ class Novel_CreateView(CreateView):
 class Novel_DetailView(DetailView):
     model = Novel
     fields = ["name", "author", "artist", "year", "publisher", "licensed", "coo_status", "fully_translated", "genres", "tags", "language"]
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['chapters'] = Chapter.objects.filter(novel=self.object)
+        return context
 
 class Novel_ListView(ListView):
     model = Novel

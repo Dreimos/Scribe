@@ -1,10 +1,69 @@
 {% extends 'base.html' %}
 
 {% block content %}
-      <h1>{{ novel.name }}</h1>
-      <h2>Description:</h2>
-      <p>{{ novel.description|linebreaks }}</p>
-      <h2>Associated names</h2>
-      <p>{{ novel.alt_name|linebreaks }}</p>
-      <a href={% url 'quickscribe:chapter-create' slug=novel.slug %} class="btn btn-primary">Submit new chapter</a>
+            <div class="row">
+                  <div class="col">
+                        <h1>{{ novel.name }}</h1>
+                  </div>
+            </div>
+            <div class="row">
+                  <div class="col-0">
+                        <h2>Genre</h2>
+                        {% for genre in novel.genres.all  %}
+                              <a href="#" title="{{ genre.description }}">{{ genre.name }}</a> <! TODO: propper genre search >
+                        {% endfor %}
+                        <h2>Tags</h2>
+                        {% for tag in novel.tags.all  %}
+                              <a href="#" title="{{ tag.description }}">{{ tag.name }}</a> <! TODO: propper tag search >
+                        {% endfor %}
+                        <h2>Language</h2>
+                        <a href="#">{{ novel.language.name }}</a> <! TODO: propper language search >
+                        <h2>Author</h2>
+                        {{ novel.author|linebreaks }}
+                        <h2>Artist</h2>
+                        {{ novel.artist|linebreaks }}
+                        <h2>Year</h2>
+                        {{ novel.year }}
+                        <h2>Status in COO</h2>
+                        {{ novel.coo_status|linebreaks }}
+                        <h2>Licensed</h2>
+                        {% if novel.licensed %}
+                              <p>Yes</p>
+                        {% else %}
+                              <p>No</p>
+                        {% endif %}
+                        <h2>Completely translated</h2>
+                        {% if novel.fully_translated %}
+                              <p>Yes</p>
+                        {% else %}
+                              <p>No</p>
+                        {% endif %}
+                        <h2>Original publisher</h2>
+                        <a href="#">{{ novel.publisher }}</a> <! TODO: might want to consider publisher search >
+                  </div>
+                  <div class="col-sm">
+                        <h2>Description</h2>
+                        <p>{{ novel.description }}</p>
+                        <h2>Associated Names</h2>
+                        <p>{{ novel.alt_name|linebreaks }}</p>
+                        <table class="table"> <! contents of the table are subject to change >
+                              <thead class="thead-dark">
+                                    <tr>
+                                          <th scope="col">Date</th>
+                                          <th scope="col">Chapter</th>
+                                          <th scope="col">Views</th>
+                                    </tr>
+                              </thead>
+                              <tbody>
+                                    {% for chapter in chapters %}
+                                    <tr>
+                                          <td>{{ chapter.uploaded|date:"m/d/Y" }}</td>
+                                          <td><a href="{% url 'quickscribe:chapter-detail' pk=chapter.id %}">{{ chapter.name }}</a></td>
+                                          <td>{{ chapter.views }}</td>
+                                    </tr>
+                                    {% endfor %}
+                              </tbody>
+                        </table>
+                  </div>
+            </div>
 {% endblock  %}

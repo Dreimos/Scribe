@@ -43,7 +43,7 @@ class Novel(models.Model):
     fully_translated = models.BooleanField("Fully Translated", default=False)
     genres = models.ManyToManyField("Genre", verbose_name="Genres")
     tags = models.ManyToManyField("Tag", verbose_name="Tags")
-    language = models.ManyToManyField("Language", verbose_name="Language")
+    language = models.ForeignKey("Language", verbose_name="Language", on_delete=models.CASCADE)
     description = models.TextField("Description", blank=True, max_length=5000)
 
     def __str__(self):
