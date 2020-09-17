@@ -3,7 +3,7 @@
 
 {% block content %}
 {% with action=view.action|default:"novel-create"  %}
-    <form class="form-horizontal" method="post" action=".">
+    <form class="form-horizontal" method="post" action="." enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">{{ action }}</button>

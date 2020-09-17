@@ -5,7 +5,7 @@ from .models import Novel, Chapter
 class Novel_Form(forms.ModelForm):
     class Meta:
         model = Novel
-        fields = ['name', 'alt_name', 'description','author', 'artist', 'year', 'publisher', 'licensed', 'coo_status', 'fully_translated', 'genres', 'tags', 'language']
+        fields = ['name', 'alt_name', 'description', 'cover', 'author', 'artist', 'year', 'publisher', 'licensed', 'coo_status', 'fully_translated', 'genres', 'tags', 'language']
         widgets = {
             'name': forms.TextInput(attrs={"placeholder": "Please enter the novel's title",}),
             'alt_name': forms.Textarea(attrs={"placeholder": "Please enter the novel's alternative titles (if applicable)"}),

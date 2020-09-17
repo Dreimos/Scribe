@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
             <div class="row">
                   <div class="col">
@@ -8,6 +8,11 @@
             </div>
             <div class="row">
                   <div class="col-0">
+                        {% if novel.cover %}
+                              <img style="width:250px" src="{{ novel.cover.url }}" >
+                        {% else %}
+                              <img style="width:250px" src="{% static 'images/placeholders/not-found-image.jpg' %}">
+                        {% endif %}
                         <h2>Genre</h2>
                         {% for genre in novel.genres.all  %}
                               <a href="{% url 'quickscribe:novel-list' slug=genre.slug %}" title="{{ genre.description }}">{{ genre.name }}</a>
