@@ -15,6 +15,7 @@ app_name = "quickscribe"
 urlpatterns = [
     path("novel/new/", Novel_CreateView.as_view(), name="novel-create"),
     path("novel/list/", Novel_ListView.as_view(), name="novel-list"),
+    path("novel/list/<slug:slug>", Novel_ListView.as_view(), name="novel-list"),
     path("novel/<slug:slug>/", Novel_DetailView.as_view(), name="novel-detail"),
     path("novel/<slug:slug>/update/", Novel_UpdateView.as_view(), name="novel-update"),
     path("api.novel/<slug:slug>/", Novel_APIView.as_view(), name='api-novel'),

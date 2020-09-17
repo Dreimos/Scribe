@@ -14,7 +14,7 @@ class Novel_Form(forms.ModelForm):
             'artist': forms.TextInput(attrs={"placeholder": "Please enter the novel's artist (if applicable)",}),
             'publisher': forms.TextInput(attrs={"placeholder": "Please enter the novel's publisher (if applicable)",}),
             'coo_status': forms.Textarea(attrs={"placeholder": "Please enter the novel's status in country of origin",}),
-            'language': forms.CheckboxSelectMultiple(),
+            'language': forms.RadioSelect(),
         }
 
 class Chapter_Form(forms.ModelForm):

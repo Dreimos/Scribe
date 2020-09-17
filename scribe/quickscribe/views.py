@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
-
+from django.http import Http404
 from rest_framework import permissions, authentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Novel, Chapter
+from .models import Novel, Chapter, Language, Genre, Tag
 from .forms import Novel_Form, Chapter_Form
 from .serializers import Novel_Serializer
 
@@ -24,6 +24,26 @@ class Novel_DetailView(DetailView):
 
 class Novel_ListView(ListView):
     model = Novel
+    
+    def get_queryset(self):
+        if 'slug' in self.kwargs:
+            novels = super().get_queryset()
+            try:
+                filter_obj = Language.objects.get(slug=self.kwargs['slug'])
+                return novels.filter(language=filter_obj)
+            except Language.DoesNotExist:
+                filter_obj = None
+            filter_obj = Tag.objects.filter(slug=self.kwargs['slug'])
+            if not filter_obj:
+                filter_obj = None
+            else:
+                return novels.filter(tags__in=filter_obj)
+            filter_obj = Genre.objects.filter(slug=self.kwargs['slug'])
+            if not filter_obj:
+                raise Http404()
+            else:
+                return novels.filter(genres__in=filter_obj)
+        return super().get_queryset()
 
 class Novel_UpdateView(UpdateView):
     model = Novel

@@ -10,14 +10,14 @@
                   <div class="col-0">
                         <h2>Genre</h2>
                         {% for genre in novel.genres.all  %}
-                              <a href="#" title="{{ genre.description }}">{{ genre.name }}</a> <! TODO: propper genre search >
+                              <a href="{% url 'quickscribe:novel-list' slug=genre.slug %}" title="{{ genre.description }}">{{ genre.name }}</a>
                         {% endfor %}
                         <h2>Tags</h2>
                         {% for tag in novel.tags.all  %}
-                              <a href="#" title="{{ tag.description }}">{{ tag.name }}</a> <! TODO: propper tag search >
+                              <a href="{% url 'quickscribe:novel-list' slug=tag.slug %}" title="{{ tag.description }}">{{ tag.name }}</a>
                         {% endfor %}
                         <h2>Language</h2>
-                        <a href="#">{{ novel.language.name }}</a> <! TODO: propper language search >
+                        <a href="{% url 'quickscribe:novel-list' slug=novel.language.slug %}">{{ novel.language.name }}</a>
                         <h2>Author</h2>
                         {{ novel.author|linebreaks }}
                         <h2>Artist</h2>
@@ -46,7 +46,7 @@
                         <p>{{ novel.description }}</p>
                         <h2>Associated Names</h2>
                         <p>{{ novel.alt_name|linebreaks }}</p>
-                        <table class="table"> <! contents of the table are subject to change >
+                        <table class="table table-borderless border border-dark"> <! contents of the table are subject to change >
                               <thead class="thead-dark">
                                     <tr>
                                           <th scope="col">Date</th>
@@ -62,8 +62,13 @@
                                           <td>{{ chapter.views }}</td>
                                     </tr>
                                     {% endfor %}
+                                    <tr>
+                                          <td colspan=3 style="padding: 0px"><a href="{% url 'quickscribe:chapter-create' slug=novel.slug %}" class="btn btn-dark btn-block rounded-0">Upload new chapter</a></td>
+                                    </tr>
                               </tbody>
                         </table>
+                        
+                        
                   </div>
             </div>
 {% endblock  %}
