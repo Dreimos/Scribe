@@ -3,8 +3,31 @@
 {% load bleach_tags %}
 
 {% block content %}
-    <h1>{{ chapter.name }}</h1>
-    <h2>{{ chapter.novel.name }}</h2>
-    <a href="#">{{ chapter.uploader.username }}</a>
-    {{ chapter.content|bleach }}
+    <div class="row">
+        <div class="col">
+            <h1>{{ chapter.name }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb rounded-0">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li> <! TODO: url to index when it's done>
+                    <li class="breadcrumb-item"><a href="{% url 'quickscribe:novel-list' %}">Library</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="{{ chapter.novel.get_absolute_url }}">{{ chapter.novel.name }}</a></li></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ chapter.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a href="{% url 'quickscribe:chapter-update' pk=chapter.id %}">[Edit]</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ chapter.content|bleach }}
+        </div>
+    </div>
 {% endblock  %}
