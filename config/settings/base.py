@@ -73,8 +73,10 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "ckeditor",
     "ckeditor_uploader",
-    'django_bleach', #TODO: impliment for safe rich text
+    'django_bleach',
     'rest_framework',
+    'social_django',
+    #'django_extensions',
 ]
 
 LOCAL_APPS = [
@@ -95,6 +97,9 @@ MIGRATION_MODULES = {"sites": "scribe.contrib.sites.migrations"}
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
@@ -308,3 +313,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ]
 }
+
+# Social oauth2
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY") # Google Consumer Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET") # Google Consumer Secret
