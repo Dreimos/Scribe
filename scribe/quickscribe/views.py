@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.http import Http404
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from rest_framework import permissions, authentication
 from rest_framework.views import APIView
@@ -48,10 +48,16 @@ class Novel_ListView(ListView):
                 return novels.filter(genres__in=filter_obj)
         return super().get_queryset()
 
-class Novel_UpdateView(LoginRequiredMixin, UpdateView):
+class Novel_UpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Novel
     form_class = Novel_Form
     action = "novel-update"
+
+    def test_func(self):
+        if self.request.user == self.get_object().uploader:
+            return True
+        else:
+            return self.request.user.is_staff
 
 class Novel_APIView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
@@ -62,9 +68,15 @@ class Novel_APIView(APIView):
         serializer = Novel_Serializer(novel, many=False)
         return Response(serializer.data)
 
-class Novel_DeleteView(LoginRequiredMixin, DeleteView):
+class Novel_DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Novel
     success_url = reverse_lazy("quickscribe:novel-list")
+
+    def test_func(self):
+        if self.request.user == self.get_object().uploader:
+            return True
+        else:
+            return self.request.user.is_staff
 
 class Chapter_CreateView(LoginRequiredMixin, CreateView):
     model = Chapter
@@ -77,10 +89,16 @@ class Chapter_CreateView(LoginRequiredMixin, CreateView):
         self.object.save()
         return super().form_valid(form)
 
-class Chapter_UpdateView(LoginRequiredMixin, UpdateView):
+class Chapter_UpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Chapter
     form_class = Chapter_Form
     action = "chapter-update"
+
+    def test_func(self):
+        if self.request.user == self.get_object().uploader:
+            return True
+        else:
+            return self.request.user.is_staff
 
 class Chapter_DetailView(DetailView):
     model = Chapter
@@ -89,9 +107,14 @@ class Chapter_DetailView(DetailView):
 class Chapter_ListView(ListView):
     model = Chapter
 
-class Chapter_DeleteView(LoginRequiredMixin, DeleteView):
+class Chapter_DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Chapter
 
     def get_success_url(self):
         return reverse_lazy("quickscribe:novel-detail", kwargs={'slug': self.object.novel.slug})
-    
+
+    def test_func(self):
+        if self.request.user == self.get_object().uploader:
+            return True
+        else:
+            return self.request.user.is_staff
