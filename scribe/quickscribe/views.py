@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.http import Http404
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from rest_framework import permissions, authentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,7 +12,7 @@ from .models import Novel, Chapter, Language, Genre, Tag
 from .forms import Novel_Form, Chapter_Form
 from .serializers import Novel_Serializer
 
-class Novel_CreateView(CreateView):
+class Novel_CreateView(LoginRequiredMixin, CreateView):
     model = Novel
     form_class = Novel_Form
 
@@ -45,7 +48,7 @@ class Novel_ListView(ListView):
                 return novels.filter(genres__in=filter_obj)
         return super().get_queryset()
 
-class Novel_UpdateView(UpdateView):
+class Novel_UpdateView(LoginRequiredMixin, UpdateView):
     model = Novel
     form_class = Novel_Form
     action = "novel-update"
@@ -59,7 +62,11 @@ class Novel_APIView(APIView):
         serializer = Novel_Serializer(novel, many=False)
         return Response(serializer.data)
 
-class Chapter_CreateView(CreateView):
+class Novel_DeleteView(LoginRequiredMixin, DeleteView):
+    model = Novel
+    success_url = reverse_lazy("quickscribe:novel-list")
+
+class Chapter_CreateView(LoginRequiredMixin, CreateView):
     model = Chapter
     form_class = Chapter_Form
 
@@ -70,7 +77,7 @@ class Chapter_CreateView(CreateView):
         self.object.save()
         return super().form_valid(form)
 
-class Chapter_UpdateView(UpdateView):
+class Chapter_UpdateView(LoginRequiredMixin, UpdateView):
     model = Chapter
     form_class = Chapter_Form
     action = "chapter-update"
@@ -81,3 +88,10 @@ class Chapter_DetailView(DetailView):
 
 class Chapter_ListView(ListView):
     model = Chapter
+
+class Chapter_DeleteView(LoginRequiredMixin, DeleteView):
+    model = Chapter
+
+    def get_success_url(self):
+        return reverse_lazy("quickscribe:novel-detail", kwargs={'slug': self.object.novel.slug})
+    

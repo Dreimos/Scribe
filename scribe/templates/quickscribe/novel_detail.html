@@ -19,7 +19,8 @@
       </div>
       <div class="row"> <! TODO: hide according to access >
             <div class="col">
-                  <p><a href="{% url 'quickscribe:novel-update' slug=novel.slug %}" class="btn btn-dark rounded-0">[Edit]</a></p>
+                  <p><a href="{% url 'quickscribe:novel-update' slug=novel.slug %}" class="btn btn-dark rounded-0">[Edit]</a>
+                  <a href="{% url 'quickscribe:novel-delete' slug=novel.slug %}" class="btn btn-dark rounded-0">[Delete]</a></p>
             </div>
       </div>
       <div class="row">
