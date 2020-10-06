@@ -85,7 +85,7 @@ class Novel_ApproveView(AccessMixin, View):
 
     def get(self, request, *args, **kwargs):
         approval_requests = Novel.objects.filter(approved=False)
-        return render(request=request, template_name=self.template_name, context={"requests": approval_requests, "post":"Not post"})
+        return render(request=request, template_name=self.template_name, context={"requests": approval_requests})
     
     def post(self, request, *args, **kwargs):
         filter_obj = request.POST.getlist('request[]')
