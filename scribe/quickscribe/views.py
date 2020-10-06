@@ -49,16 +49,17 @@ class Novel_ListView(ListView):
                 return novels.filter(genres__in=filter_obj, approved=True)
         return novels.filter(approved=True)
 
-class Novel_UpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class Novel_UpdateView(AccessMixin, UpdateView):
     model = Novel
     form_class = Novel_Form
     action = "novel-update"
 
-    def test_func(self):
-        if self.request.user == self.get_object().uploader:
-            return True
-        else:
-            return self.request.user.is_staff
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 class Novel_APIView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
@@ -69,16 +70,16 @@ class Novel_APIView(APIView):
         serializer = Novel_Serializer(novel, many=False)
         return Response(serializer.data)
 
-class Novel_DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class Novel_DeleteView(AccessMixin, DeleteView):
     model = Novel
     success_url = reverse_lazy("quickscribe:novel-list")
 
-    def test_func(self):
-        if self.request.user == self.get_object().uploader:
-            return True
-        else:
-            return self.request.user.is_staff
-
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 class Novel_ApproveView(AccessMixin, View):
     template_name = "quickscribe/novel_approve.html"
@@ -118,16 +119,17 @@ class Chapter_CreateView(LoginRequiredMixin, CreateView):
         self.object.save()
         return super().form_valid(form)
 
-class Chapter_UpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class Chapter_UpdateView(AccessMixin, UpdateView):
     model = Chapter
     form_class = Chapter_Form
     action = "chapter-update"
 
-    def test_func(self):
-        if self.request.user == self.get_object().uploader:
-            return True
-        else:
-            return self.request.user.is_staff
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 class Chapter_DetailView(DetailView):
     model = Chapter
@@ -136,14 +138,15 @@ class Chapter_DetailView(DetailView):
 class Chapter_ListView(ListView):
     model = Chapter
 
-class Chapter_DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class Chapter_DeleteView(AccessMixin, DeleteView):
     model = Chapter
 
     def get_success_url(self):
         return reverse_lazy("quickscribe:novel-detail", kwargs={'slug': self.object.novel.slug})
 
-    def test_func(self):
-        if self.request.user == self.get_object().uploader:
-            return True
-        else:
-            return self.request.user.is_staff
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
