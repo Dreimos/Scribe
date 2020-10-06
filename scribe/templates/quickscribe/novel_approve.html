@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>{{ post }}</p>
+    <form action="." method="post">
+        {% csrf_token %}
+        <table class="table table-borderless border border-dark">
+            <thead class="thead-dark">
+                <tr>
+                    <th colspan scope="col"></th>
+                    <th colspan scope="col">#</th>
+                    <th scpope="col">Novel</th>
+                    <th scpope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="request[]" value={{ request.id }}>{{ forloop.counter0 }}/{{ request.id }}</input>
+                        </td>
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+                        <td>
+                            <a href={% url 'quickscribe:novel-detail' slug=request.slug %}>{{ request.name }}</a>
+                        </td>
+                        <td>
+                            <a href={% url 'quickscribe:novel-update' slug=request.slug %} class="btn btn-dark">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan=2 style="padding: 0px">
+                        <button type="submit" class="btn btn-dark btn-block rounded-0" name="submit" value="Approve">Approve</button>
+                    </td>
+                    <td colspan=2 style="padding: 0px">
+                        <button type="submit" class="btn btn-dark btn-block rounded-0" name="submit" value="Decline">Decline</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+{% endblock  %}

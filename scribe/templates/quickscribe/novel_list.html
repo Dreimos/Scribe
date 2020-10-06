@@ -1,10 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-    {% for novel in novel_list %}
-        <div>
-            <a href="{% url 'quickscribe:novel-detail' slug=novel.slug %}">{{ novel.name }}</a>
-        </div>
-    {% endfor %}
-    <a href={% url 'quickscribe:novel-create'%} class="btn btn-primary">Submit new novel</a>
+    <table class="table table-borderless border border-dark">
+        <thead class="thead-dark">
+            <tr>
+                <th scpope="col">Cover</th>
+                <th scpope="col">Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for novel in novel_list %}
+                <tr>
+                    <td>
+                        {% if novel.cover %}
+                            <a href="{% url 'quickscribe:novel-detail' slug=novel.slug %}"><img style="width:150px" src="{{ novel.cover.url }}" ></a>
+                        {% else %}
+                            <a href="{% url 'quickscribe:novel-detail' slug=novel.slug %}"><img style="width:150px" src="{% static 'images/placeholders/not-found-image.jpg' %}"></a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'quickscribe:novel-detail' slug=novel.slug %}">{{ novel.name }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan=2 style="padding: 0px"><a href="{% url 'quickscribe:novel-create' %}" class="btn btn-dark btn-block rounded-0">Submit new novel</a></td>
+            </tr>
+        </tbody>
+    </table>
 {% endblock  %}

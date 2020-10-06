@@ -47,6 +47,7 @@ class Novel(models.Model):
     description = models.TextField("Description", blank=True, max_length=5000)
     cover = models.ImageField("Cover", blank=True)
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

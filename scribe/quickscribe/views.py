@@ -1,8 +1,9 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.http import Http404
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 
 from rest_framework import permissions, authentication
 from rest_framework.views import APIView
@@ -29,24 +30,24 @@ class Novel_ListView(ListView):
     model = Novel
     
     def get_queryset(self):
+        novels = super().get_queryset()
         if 'slug' in self.kwargs:
-            novels = super().get_queryset()
             try:
                 filter_obj = Language.objects.get(slug=self.kwargs['slug'])
-                return novels.filter(language=filter_obj)
+                return novels.filter(language=filter_obj, approved=True)
             except Language.DoesNotExist:
                 filter_obj = None
             filter_obj = Tag.objects.filter(slug=self.kwargs['slug'])
             if not filter_obj:
                 filter_obj = None
             else:
-                return novels.filter(tags__in=filter_obj)
+                return novels.filter(tags__in=filter_obj, approved=True)
             filter_obj = Genre.objects.filter(slug=self.kwargs['slug'])
             if not filter_obj:
                 raise Http404()
             else:
-                return novels.filter(genres__in=filter_obj)
-        return super().get_queryset()
+                return novels.filter(genres__in=filter_obj, approved=True)
+        return novels.filter(approved=True)
 
 class Novel_UpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Novel
@@ -77,6 +78,34 @@ class Novel_DeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         else:
             return self.request.user.is_staff
+
+
+class Novel_ApproveView(AccessMixin, View):
+    template_name = "quickscribe/novel_approve.html"
+
+    def get(self, request, *args, **kwargs):
+        approval_requests = Novel.objects.filter(approved=False)
+        return render(request=request, template_name=self.template_name, context={"requests": approval_requests, "post":"Not post"})
+    
+    def post(self, request, *args, **kwargs):
+        filter_obj = request.POST.getlist('request[]')
+        approval_requests = Novel.objects.filter(approved=False, id__in=filter_obj)
+        if request.POST['submit'] == "Approve":
+            approval_requests.update(approved=True)
+            return redirect("quickscribe:approve-novel")
+        elif request.POST['submit'] == "Decline":
+            approval_requests.delete()
+            return redirect("quickscribe:approve-novel")
+        else:
+            raise Http404()
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not self.request.user.is_staff:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
 
 class Chapter_CreateView(LoginRequiredMixin, CreateView):
     model = Chapter
