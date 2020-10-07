@@ -17,6 +17,12 @@ class Novel_CreateView(LoginRequiredMixin, CreateView):
     model = Novel
     form_class = Novel_Form
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.uploader = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
 class Novel_DetailView(AccessMixin, DetailView):
     model = Novel
     fields = ["name", "author", "artist", "year", "publisher", "licensed", "coo_status", "fully_translated", "genres", "tags", "language"]

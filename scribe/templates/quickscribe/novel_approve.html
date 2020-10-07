@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% if requests %}
     <form action="." method="post">
         {% csrf_token %}
         <table class="table table-borderless border border-dark">
@@ -40,4 +41,7 @@
             </tbody>
         </table>
     </form>
+    {% else %}
+        <p>The novel queue is empty.</p>
+    {% endif %}
 {% endblock  %}
