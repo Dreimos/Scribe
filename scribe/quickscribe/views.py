@@ -17,10 +17,18 @@ class Novel_CreateView(LoginRequiredMixin, CreateView):
     model = Novel
     form_class = Novel_Form
 
-class Novel_DetailView(DetailView):
+class Novel_DetailView(AccessMixin, DetailView):
     model = Novel
     fields = ["name", "author", "artist", "year", "publisher", "licensed", "coo_status", "fully_translated", "genres", "tags", "language"]
     
+    def dispatch(self, request, *args, **kwargs):
+        if not self.get_object().approved:
+            if not request.user.is_authenticated:
+                return self.handle_no_permission()
+            if not self.request.user.is_staff and self.request.user != self.get_object().uploader:
+                return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['chapters'] = Chapter.objects.filter(novel=self.object)
@@ -57,7 +65,7 @@ class Novel_UpdateView(AccessMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
-        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+        if not self.request.user.is_staff and self.request.user != self.get_object().uploader:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
@@ -77,7 +85,7 @@ class Novel_DeleteView(AccessMixin, DeleteView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
-        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+        if not self.request.user.is_staff and self.request.user != self.get_object().uploader:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
@@ -127,7 +135,7 @@ class Chapter_UpdateView(AccessMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
-        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+        if not self.request.user.is_staff and self.request.user != self.get_object().uploader:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
@@ -147,6 +155,6 @@ class Chapter_DeleteView(AccessMixin, DeleteView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
-        if not self.request.user.is_staff or self.request.user != self.get_object().uploader:
+        if not self.request.user.is_staff and self.request.user != self.get_object().uploader:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
