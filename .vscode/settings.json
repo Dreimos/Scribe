@@ -1,5 +1,6 @@
 {
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "D:\\ProgramData\\Miniconda3\\envs\\scribe\\python.exe"
+    "python.pythonPath": "D:\\ProgramData\\Miniconda3\\envs\\scribe\\python.exe",
+    "restructuredtext.confPath": ""
 }
