@@ -149,6 +149,12 @@ class Chapter_DetailView(DetailView):
     model = Chapter
     fields = ["name", 'content', 'novel', 'uploader', 'updated', 'views']
 
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.views += 1
+        obj.save()
+        return super().get(request, *args, **kwargs)
+
 class Chapter_ListView(ListView):
     model = Chapter
 
